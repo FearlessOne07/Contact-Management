@@ -7,13 +7,14 @@ private:
   std::string _firstName;
   std::string _lastName;
   std::string _email;
+  unsigned _id;
 
 public:
   Contact(std::string firstName, std::string lastName, std::string phone,
           std::string email);
-
-  const std::string &GetFirstName() const { return _firstName; }
-  const std::string &GetLastName() const { return _lastName; }
-  const std::string &GetEmail() const { return _email; }
-  const std::string &GetPhone() const { return _phone; }
+  const std::string &GetFirstName() const;
+  const std::string &GetLastName() const;
+  const std::string &GetEmail() const;
+  const std::string &GetPhone() const;
+  unsigned GetId() const;
 };
