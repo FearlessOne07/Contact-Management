@@ -1,6 +1,8 @@
 #include "ContactManager.hpp"
+#include <ios>
 #include <iostream>
 #include <limits>
+#include <string>
 
 // Colors
 #define RESET "\033[0m"
@@ -22,12 +24,16 @@
 #define BOLD_WHITE "\033[1m\033[37m"
 #define CLEAR_SCREEN "\033[2J\033[H"
 
+void View(const ContactManager &conMan);
+void Add(const ContactManager &conMan);
+
 int main(void) {
   ContactManager conMan;
 
   enum Action : unsigned int { EXIT = 0, VIEW, ADD, DELETE, EDIT };
   unsigned int action = 0;
   bool selected = false;
+  std::cout << CLEAR_SCREEN;
   while (!selected) {
     selected = true;
     std::cout << BOLD_YELLOW << "What do you want to do?" << RESET << "\n";
@@ -55,8 +61,10 @@ int main(void) {
     return 0;
     break;
   case VIEW:
+    View(conMan);
     break;
   case ADD:
+    Add(conMan);
     break;
   case DELETE:
     break;
@@ -65,4 +73,94 @@ int main(void) {
   default:
     return -1;
   }
+}
+
+void View(const ContactManager &conMan) {
+  enum Action : unsigned { EXIT = 0 };
+  if (conMan.GetContacts().size() == 0) {
+    std::cout << BOLD_YELLOW << "There are no contacts to view!" << RESET
+              << "\n";
+  } else {
+    for (const Contact &contact : conMan.GetContacts()) {
+      std::cout << contact.GetFirstName() << " " << contact.GetLastName()
+                << "\n";
+    }
+  }
+}
+
+void Add(const ContactManager &conMan) {
+  std::string firstName;
+  bool firstEntered = false;
+  std::string lastName;
+  bool lastEntered = false;
+  std::string email;
+  bool emailEntered = false;
+  std::string phone;
+  bool phoneEntered = false;
+
+  while (!firstEntered) {
+    firstEntered = true;
+    std::cout << "First name: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, firstName);
+    if (std::cin.fail()) {
+      std::cout << "Invalid Input! Try again!\n";
+      firstEntered = false;
+    } else if (firstName.length() == 0) {
+      std::cout << "First name cannot be empty!\n";
+      firstEntered = false;
+    } else if (firstName.length() < 3) {
+      std::cout << "First name must be at least three characters long\n";
+      firstEntered = false;
+    }
+  }
+
+  while (!lastEntered) {
+    lastEntered = true;
+    std::cout << "Last name: ";
+    std::getline(std::cin, lastName);
+    if (std::cin.fail()) {
+      std::cout << "Invalid Input! Try again!\n";
+      lastEntered = false;
+    } else if (lastName.length() == 0) {
+      lastName = "Not Entered";
+    } else if (lastName.length() < 3) {
+      std::cout << "Last name must be at least three characters long\n";
+      lastEntered = false;
+    }
+  }
+
+  while (!phoneEntered) {
+    phoneEntered = true;
+    std::cout << "Phone: ";
+    std::getline(std::cin, phone);
+    if (std::cin.fail()) {
+      std::cout << "Invalid Input! Try again!\n";
+      phoneEntered = false;
+    } else if (phone.length() == 0) {
+      std::cout << "Phone cannot be empty!\n";
+      phoneEntered = false;
+    } else if (phone.length() != 11) {
+      std::cout << "Phone must be at eleven characters long\n";
+      phoneEntered = false;
+    }
+  }
+
+  while (!emailEntered) {
+    emailEntered = true;
+    std::cout << "Email: ";
+    std::getline(std::cin, email);
+    if (std::cin.fail()) {
+      std::cout << "Invalid Input! Try again!\n";
+      emailEntered = false;
+    } else if (email.length() == 0) {
+      email = "Not Entered";
+    } else if (email.length() < 3) {
+      std::cout << "email must be at least three characters long\n";
+      emailEntered = false;
+    }
+  }
+
+  std::cout << firstName << ":" << lastName << ":" << phone << ":" << email
+            << "\n";
 }
